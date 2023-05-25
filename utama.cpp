@@ -1,100 +1,84 @@
 #include <iostream>
-#include <cmath>
 
 using namespace std;
-struct TNode{
-    int data;
-    TNode *next;
+struct Lingkaran{
+    double radius;
+    Lingkaran *next;
 };
 
-struct MyList{
-    TNode *head;
-
-    void init(){
-        head=NULL;
+struct MyStack {
+    Lingkaran *top;
+    
+    void create(){
+        top=NULL;
+        cout<<"Stack create"<<endl;
     }
     bool isEmpty(){
-        return head==NULL;
+        //kode untuk memeriksa apakah stack kosong
+        return top==NULL;
     }
-    void insertDepan(int databaru){
-        TNode *baru;
-        baru=new TNode;
-        baru->data=databaru;
-        if (isEmpty()){
-            head=baru;
-            head->next=NULL;
-        } else {
-            baru->next=head;
-            head=baru;
-        }
-
+    bool isFull(Lingkaran *tmp){
+        tmp = new (nothrow) Lingkaran;
+        return (tmp==NULL);
     }
-    void insertBelakang(int databaru){
-        TNode *baru, *bantu;
-        baru = new TNode;
-        baru->data = databaru;
+    void push(double r){
+        Lingkaran *baru;
+        baru = new Lingkaran;
+        baru->radius=r;
         baru->next=NULL;
         if (isEmpty()){
-            head = baru;
+            top=baru;
         } else {
-            bantu = head;
-            while(bantu->next != NULL){
-                bantu = bantu->next;
-            }
-            bantu->next = baru;
+            baru->next=top;
+            top=baru;
         }
-        cout<<"Data "<<databaru<<" ditambahkan"<<endl;
+        cout<<"Push "<<r<<"\n";
     }
-    void hapusDepan(){
-        if (isEmpty()){
-            cout<<"List kosong";
-        }else if (head->next=NULL){
-            cout<<"Data head "<<head->data<<" dihapus\n";
-            head=NULL;
+    Lingkaran* pop(){
+        if (isEmpty()) {
+            cout<<"Stack kosong\n";
+            return top;
         } else {
-            /*
-            Buat variable bantu -> jawabnya TNode *bantu;
-            Set bantu = head  -> ?? apa ?
-            Head = bantu->next -> ??
-            hapus bantu -> ??
-            waktu 5 menit... tulis di komentar
-            */
-            TNode *bantu;
-            bantu = new TNode;  // tambahan untuk kode membuat variabel bantu
-            bantu = head;
-            head = bantu->next;
-            cout<<head->data;
-            cout<<"Data "<<bantu->data<<" dihapus\n";
-            delete bantu;
-            
-        }
-    }
-    void cetak(){
-        /*
-            menelusuri sampai ketemu node yg nextnya NULL
-         */
-        
-        if (isEmpty()){
-            cout<<"List masih kosong";
-        } else {
-            TNode *bantu;
-            bantu=new TNode;
-            bantu = head;
-            while (bantu!=NULL){
-                cout<<bantu->data<<endl;
-                bantu = bantu->next;
-            }
-        }
+            Lingkaran *tmp;
+            tmp = top;
+            top = top->next;
+            cout<<tmp->radius<<" poped\n";
+            return tmp;
+        }    
+    } 
+    void printTop(){
+        //tambaha kode untuk cetak data paling atas 3 menit
+        cout<<top->radius;
     }
 };
-
+void hanoi(int discs, MyStack *fromPole, MyStack *toPole, MyStack *aux){
+    Lingkaran *l = new Lingkaran;
+    if (discs>=1){
+        hanoi(discs-1,fromPole,aux,toPole);
+        l = fromPole->pop();
+        toPole->push(l->radius);
+        hanoi(discs-1,aux,toPole,fromPole);
+    }
+}
 int main(){
-    MyList list;
-    list.init();
-    list.insertDepan(5);
-    list.insertDepan(30);
-    list.insertBelakang(70);
-    list.hapusDepan();
-    list.cetak();
+    MyStack *fromPole, *toPole, *aux;
+    MyStack ms;
+
+    ms.push(10);
+
+    fromPole=new MyStack;
+    toPole=new MyStack;
+    aux=new MyStack;
+
+    fromPole.push(3);
+    fromPole->push(2);
+    fromPole->push(1);
+    // fromPole.printTop();
+    hanoi(3,fromPole,toPole,aux);
+    cout<<"Hasil :\n";
+    cout<<"Top dari toPole: ";
+    toPole->printTop();
+    cout<<"\nTop dari fromPole: ";
+    fromPole->printTop();
     return 0;
 }

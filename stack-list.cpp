@@ -54,6 +54,7 @@ struct MyStack {
 
 int main(){
     MyStack *ms;
+    ms = new MyStack;
     ms->create();
     ms->push(5);
     return 0;
